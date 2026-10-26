@@ -1,0 +1,31 @@
+{
+  "type": "lifi",
+  "tool": "across",
+  "toolDetails": { "key": "across", "name": "Across" },
+  "action": {
+    "fromToken": { "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "chainId": 8453, "symbol": "USDC", "decimals": 6, "name": "USD Coin" },
+    "toToken": { "address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", "chainId": 42161, "symbol": "USDC", "decimals": 6, "name": "USD Coin" },
+    "fromChainId": 8453,
+    "toChainId": 42161,
+    "fromAmount": "10000000",
+    "slippage": 0.005,
+    "fromAddress": "0xd3ab5fc84faa0396aff38cfea419e0f9cb338714"
+  },
+  "estimate": {
+    "tool": "across",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmount": "9965731",
+    "toAmountMin": "9965731",
+    "fromAmount": "10000000",
+    "executionDuration": 12,
+    "feeCosts": [{ "name": "LIFI Fixed Fee", "amount": "25000", "amountUSD": "0.025", "percentage": "0.0025", "included": true }]
+  },
+  "includedSteps": [{ "type": "protocol", "tool": "feeCollection" }, { "type": "cross", "tool": "across" }],
+  "transactionRequest": {
+    "to": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "data": "0x1794958fcafe",
+    "value": "0x0",
+    "from": "0xd3ab5fc84faa0396aff38cfea419e0f9cb338714",
+    "chainId": 8453
+  }
+}

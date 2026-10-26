@@ -1,0 +1,37 @@
+{
+  "type": "lifi",
+  "tool": "uniswap",
+  "toolDetails": { "key": "uniswap", "name": "Uniswap V3" },
+  "action": {
+    "fromToken": { "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "chainId": 8453, "symbol": "USDC", "decimals": 6, "name": "USD Coin" },
+    "toToken": { "address": "0x4200000000000000000000000000000000000006", "chainId": 8453, "symbol": "WETH", "decimals": 18, "name": "Wrapped Ether" },
+    "fromChainId": 8453,
+    "toChainId": 8453,
+    "fromAmount": "100000000",
+    "slippage": 0.005,
+    "fromAddress": "0xd3ab5fc84faa0396aff38cfea419e0f9cb338714"
+  },
+  "estimate": {
+    "tool": "uniswap",
+    "approvalAddress": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "toAmount": "39200000000000000",
+    "toAmountMin": "39004000000000000",
+    "fromAmount": "100000000",
+    "executionDuration": 30,
+    "fromAmountUSD": "100.00",
+    "toAmountUSD": "99.40",
+    "gasCosts": [{ "type": "SEND", "amount": "120000000000000", "amountUSD": "0.30" }],
+    "feeCosts": [{ "name": "LIFI Fixed Fee", "amount": "250000", "amountUSD": "0.25", "percentage": "0.0025", "included": true }]
+  },
+  "includedSteps": [],
+  "integrator": "trezo",
+  "transactionRequest": {
+    "to": "0x1231DEB6f5749EF6cE6943a275A1D3E7486F4EaE",
+    "data": "0x4630a0d8deadbeef",
+    "value": "0x0",
+    "from": "0xd3ab5fc84faa0396aff38cfea419e0f9cb338714",
+    "chainId": 8453,
+    "gasPrice": "0x3eaf2c6",
+    "gasLimit": "0x45e8a"
+  }
+}

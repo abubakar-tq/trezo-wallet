@@ -12,6 +12,7 @@
 
 import type { NetworkKey } from "@/src/integration/networks";
 import type { Address } from "viem";
+import { LIFI_DIAMOND } from "../lifi/constants";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,6 +55,10 @@ const UNISWAP_QUOTER_V2_BASE = "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a" as A
 const UNISWAP_SWAP_ROUTER02_BASE = "0x2626664c2603336E57B271c5C0b26F421741e481" as Address;
 // Uniswap V2 on Base — verify: cast code 0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24 --rpc-url $FORK_RPC_URL
 const UNISWAP_V2_ROUTER_BASE = "0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24" as Address;
+// LI.FI Diamond (deterministic across chains incl. Base). Token approvals for
+// LI.FI-routed swaps target this address (= estimate.approvalAddress). ADR 0014.
+// Single source of truth lives in lifi/constants.ts.
+const LIFI_DIAMOND_BASE = LIFI_DIAMOND;
 
 // ─── Sepolia Addresses ────────────────────────────────────────────────────────
 // Uniswap V3 testnet deployments. Verify before mainnet rollout.
@@ -182,7 +187,7 @@ const DEX_CONFIGS: Partial<Record<NetworkKey, DexConfig>> = {
     quoterAddress: UNISWAP_QUOTER_V2_BASE,
     routerAddress: UNISWAP_SWAP_ROUTER02_BASE,
     wrappedNativeAddress: BASE_WETH,
-    trustedSpenders: [UNISWAP_SWAP_ROUTER02_BASE, UNISWAP_V2_ROUTER_BASE],
+    trustedSpenders: [UNISWAP_SWAP_ROUTER02_BASE, UNISWAP_V2_ROUTER_BASE, LIFI_DIAMOND_BASE],
     supportedPools: [
       {
         sellToken: BASE_USDC,
@@ -209,7 +214,7 @@ const DEX_CONFIGS: Partial<Record<NetworkKey, DexConfig>> = {
     quoterAddress: UNISWAP_QUOTER_V2_BASE,
     routerAddress: UNISWAP_SWAP_ROUTER02_BASE,
     wrappedNativeAddress: BASE_WETH,
-    trustedSpenders: [UNISWAP_SWAP_ROUTER02_BASE, UNISWAP_V2_ROUTER_BASE],
+    trustedSpenders: [UNISWAP_SWAP_ROUTER02_BASE, UNISWAP_V2_ROUTER_BASE, LIFI_DIAMOND_BASE],
     supportedPools: [
       {
         sellToken: BASE_USDC,

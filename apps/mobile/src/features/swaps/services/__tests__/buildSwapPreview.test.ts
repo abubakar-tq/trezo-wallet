@@ -18,6 +18,19 @@ function run(): void {
   assert(p.assetDeltas[1].direction === "in" && p.assetDeltas[1].amountDisplay === "142.61", "buy in 142.61");
   assert(p.slippageBps === 50 && p.minReceivedDisplay === "141.8 USDC", `min: ${p.minReceivedDisplay}`);
   assert(p.contextLabel === "via uniswap_v3", "context label");
+
+  // LI.FI-aggregated swap surfaces the chosen DEX + aggregator credit.
+  const lifiPlan: any = {
+    ...plan,
+    quote: { ...plan.quote, provider: "lifi", routeMetadata: { aggregator: "lifi", toolName: "Uniswap V3" } },
+  };
+  const lp = buildSwapPreview(lifiPlan, "Base Fork");
+  assert(lp.contextLabel === "via Uniswap V3 · aggregated by LI.FI", `lifi label: ${lp.contextLabel}`);
+
+  // LI.FI without a tool name falls back gracefully.
+  const lifiNoTool: any = { ...plan, quote: { ...plan.quote, provider: "lifi", routeMetadata: {} } };
+  assert(buildSwapPreview(lifiNoTool, "Base Fork").contextLabel === "via lifi", "lifi fallback label");
+
   console.log("OK");
 }
 run();

@@ -38,7 +38,7 @@ import type { PreparedSmartAccountExecution } from "@/src/features/wallet/types/
 import WalletPersistenceService from "@/src/features/wallet/services/SupabaseWalletService";
 import { useWalletStore } from "@/src/features/wallet/store/useWalletStore";
 import { DEFAULT_CHAIN_ID, type SupportedChainId } from "@/src/integration/chains";
-import { resolveNetworkKey, getNetworkConfig } from "@/src/integration/networks";
+import { resolveNetworkKey, getNetworkConfig, type NetworkKey } from "@/src/integration/networks";
 import {
   getBridgeConfig,
   isCrossChainBridgeReady,
@@ -48,6 +48,7 @@ import {
 import { getDexConfig } from "@/src/features/swaps/config/dexRegistry";
 import { useUserStore } from "@/src/store/useUserStore";
 import { defaultSlippageBps } from "@/src/features/dex/utils/slippage";
+import { LiveRouteCard } from "@/src/features/dex/components/LiveRouteCard";
 import { TabScreenContainer, TokenIcon, AssetPickerModal, type Asset } from "@shared/components";
 import { ChainSwitcherChip } from "@features/wallet/components/ChainSwitcherChip";
 import Toast from "@/src/shared/components/feedback/Toast";
@@ -1294,6 +1295,19 @@ export const DexScreen: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Live LI.FI aggregator route (read-only). Renders only on mainnet/fork keys. */}
+        <LiveRouteCard
+          mode={activeTab}
+          networkKey={networkKey}
+          account={walletAddress}
+          sellToken={sellToken}
+          buyToken={buyToken}
+          sellAmountDecimal={sellAmountDecimal}
+          slippageBps={effectiveSlippageBps}
+          destNetworkKey={bridgeDestNetworkKey as NetworkKey | null}
+          destOutputToken={effectiveBridgeOutputToken}
+        />
 
         {activeTab === "bridge" && (
           <>

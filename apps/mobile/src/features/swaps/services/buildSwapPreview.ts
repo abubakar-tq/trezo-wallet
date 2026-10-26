@@ -7,10 +7,17 @@ export function buildSwapPreview(plan: SwapPlan, networkName: string): TxPreview
   const sellDisplay = formatUnits(quote.sellAmountRaw, quote.sellToken.decimals);
   const buyDisplay = formatUnits(quote.estimatedBuyAmountRaw, quote.buyToken.decimals);
   const minDisplay = formatUnits(quote.minimumBuyAmountRaw, quote.buyToken.decimals);
+  // For LI.FI-aggregated swaps, surface the chosen DEX (e.g. "Uniswap V3") and
+  // credit the aggregator; otherwise keep the legacy "via <provider>" label.
+  const toolName = (quote.routeMetadata as { toolName?: string } | undefined)?.toolName;
+  const contextLabel =
+    quote.provider === "lifi" && toolName
+      ? `via ${toolName} · aggregated by LI.FI`
+      : `via ${quote.provider}`;
   return {
     kind: "swap",
     title: "Confirm swap",
-    contextLabel: `via ${quote.provider}`,
+    contextLabel,
     assetDeltas: [
       {
         symbol: quote.sellToken.symbol,

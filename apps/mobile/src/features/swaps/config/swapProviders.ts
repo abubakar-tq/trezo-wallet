@@ -14,6 +14,7 @@
  */
 
 import type { SwapRouteProvider } from "@/src/features/swaps/providers/SwapRouteProvider";
+import { LiFiSwapProvider } from "@/src/features/swaps/providers/LiFiSwapProvider";
 import { LocalMockSwapProvider } from "@/src/features/swaps/providers/LocalMockSwapProvider";
 import { UniswapV3Provider } from "@/src/features/swaps/providers/UniswapV3Provider";
 import { UniswapV2BaseProvider } from "@/src/features/swaps/providers/UniswapV2BaseProvider";
@@ -28,10 +29,15 @@ import type { Address } from "viem";
 
 // ─── Provider instances ────────────────────────────────────────────────────────
 // Order matters for getProviderForNetwork: it picks the first provider whose
-// supportsPair() returns true. V2 (Base only) goes first because getAmountsOut
-// is a pure view call — cheaper than the V3 QuoterV2 simulation.
+// supportsPair() returns true.
+//   - LiFi goes first but is mainnet-gated (supportsNetwork → base-mainnet /
+//     base-mainnet-fork only), so on testnet it returns false and the loop
+//     falls through to the direct providers untouched (ADR 0014).
+//   - V2 (Base only) precedes V3 because getAmountsOut is a pure view call —
+//     cheaper than the V3 QuoterV2 simulation.
 
 const ALL_PROVIDERS: readonly SwapRouteProvider[] = [
+  new LiFiSwapProvider(),
   new LocalMockSwapProvider(),
   new UniswapV2BaseProvider(),
   new UniswapV3Provider(),

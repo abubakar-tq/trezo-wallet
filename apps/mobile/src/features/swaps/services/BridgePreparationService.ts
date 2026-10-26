@@ -13,6 +13,7 @@ import type { TokenMetadata } from "@/src/features/assets/types/token";
 import { AllowanceService } from "@/src/features/swaps/services/AllowanceService";
 import { BridgeQuoteService } from "@/src/features/swaps/services/BridgeQuoteService";
 import {
+  findBridgeOutputToken,
   findBridgeRoute,
   getBridgeConfig,
 } from "@/src/features/swaps/config/bridgeRegistry";
@@ -303,6 +304,24 @@ export class BridgePreparationService {
         })
       : "0x";
 
+    // Across delivers the CANONICAL destination token (the input token's equivalent
+    // on the dest chain), per the bridgeRegistry design note. For same-asset bridges
+    // this equals outputToken; for a cross-chain swap the executor receives the
+    // canonical token and swaps it to the user's desired outputToken (carried in
+    // bridgeMessage.buyToken). Passing the desired token here would (a) ask Across for
+    // a cross-asset route it isn't configured for and (b) make the executor's
+    // `buyToken == tokenSent` short-circuit skip the swap entirely.
+    const canonicalOutputToken = findBridgeOutputToken(
+      intent.sourceNetworkKey,
+      intent.destNetworkKey,
+      inputToken.address as Address,
+    );
+    if (!canonicalOutputToken) {
+      throw new Error(
+        `No canonical bridge output token for ${inputToken.symbol} on ${intent.sourceNetworkKey} -> ${intent.destNetworkKey}.`,
+      );
+    }
+
     const depositCalldata = encodeFunctionData({
       abi: SPOKE_POOL_ABI,
       functionName: "depositV3",
@@ -310,7 +329,7 @@ export class BridgePreparationService {
         intent.walletAddress, // depositor
         quote.destRecipient, // user wallet (same-asset) or executor (cross-chain swap)
         inputToken.address as Address,
-        outputToken.address as Address,
+        canonicalOutputToken, // canonical dest token Across delivers (NOT the user's desired token)
         quote.inputAmountRaw,
         quote.outputAmountRaw,
         BigInt(intent.destChainId),
